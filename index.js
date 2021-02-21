@@ -50,15 +50,15 @@ const iPhoneX = devices["iPhone X"];
     await page2.waitForSelector('#ReduxFormInput2')
     await page2.type('#ReduxFormInput2',shopname,{delay:100})
     console.log('Shopname :',shopname)
-   // fs.writeFileSync('shop.txt', shopname);
+  
     console.log('====================================')
  //mengisi password  
     console.log('Mengisi password : sukses') 
     await page2.type('#ReduxFormInput3',pass,{delay:100})
     console.log('Pass :',pass)
-  //  fs.writeFileSync('pass.txt', pass);
+
  //submit
-    fs.writeFileSync('tes.txt',mail,shopname,pass);
+ fs.appendFileSync("userpass.txt", `${mail}\n${shopname}\n${pass}\n`);
     console.log('====================================')
     console.log('Proses submit ..')
     await page2.click('#RB_React_Component_SignupFormContainer_0 > div > form > span > button')
@@ -67,6 +67,18 @@ const iPhoneX = devices["iPhone X"];
     await page2.click('#app > div > div.ds-theme-find-your-thing.shared-App__dsWrapper--RyVET > div:nth-child(2) > div > div > div > div > section > div.node_modules--redbubble-design-system-react-Box-styles__box--206r9.shared-components-NewArtistDashboard-NewArtistDashboard__NewArtistDashboard--1tlq8 > div.node_modules--redbubble-design-system-react-Box-styles__box--206r9.shared-components-NewArtistDashboard-NewArtistDashboard__steps--1H-r0 > div.node_modules--redbubble-design-system-react-Card-styles__card--3Xq2P.shared-components-NewArtistDashboard-AccountSettings-AccountSettings__card--IGLgl.node_modules--redbubble-design-system-react-Card-styles__overflowHidden--2ppNF.node_modules--redbubble-design-system-react-Card-styles__rounded--x4wZQ.node_modules--redbubble-design-system-react-Card-styles__elevationMedium--3NRmN > div.node_modules--redbubble-design-system-react-Box-styles__box--206r9.node_modules--redbubble-design-system-react-Box-styles__paddingBottom-2--3bbcw.node_modules--redbubble-design-system-react-Box-styles__paddingLeft-1--1V58W.node_modules--redbubble-design-system-react-Box-styles__paddingRight-1--1g1Gg > ul > li:nth-child(1) > h6 > a > span > span')
     await page2.waitForSelector('#send-email-button')
     await page2.click('#send-email-button')
-    console.log('Selesai, silahkan klik inbox email')
-    console.log('https://generator.email/',mail)
-})();
+//get otp
+    await page.goto(`${ali2}`,{waitUntil : 'networkidle2'});
+    await page.waitForSelector('#email-table > div.e7m.row.list-group-item > div.e7m.col-md-12.ma1 > div.e7m.mess_bodiyy > p:nth-child(3)',{timeout:200000})
+    const otp = await page.evaluate(() =>
+    document.querySelector("#email-table > div.e7m.row.list-group-item > div.e7m.col-md-12.ma1 > div.e7m.mess_bodiyy > p:nth-child(3)").textContent.trim()
+   );
+   console.log('OTP: '+otp)
+   const page3 = await context.newPage();
+   const verif = `${otp}`;
+   await page3.emulate(iPhoneX);
+   await page3.goto(`${verif}`,{timeout:100000});
+   console.log('====================================')
+   console.log('Akun selesai di verifikasi: ',`\n${mail}\n${shopname}\n${pass}\n`)
+await browser.close()
+  })();
